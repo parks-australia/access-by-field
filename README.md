@@ -1,3 +1,9 @@
+> This is a Drupal 11-compatible clone of the [Access by Field Drupal module](https://www.drupal.org/project/access_by_field), whose [source code lives in GitLab](https://git.drupalcode.org/project/access_by_field).
+>
+> It's been cloned here as Gitlab is not permitting forking the module, and the maintainers have not responded to requests for access to the repository.
+>
+> The branch `1.0.0` corresponds to the latest stable release of the module, which is compatible with Drupal 10. The branch `2.0.x` contains the necessary changes to make the module compatible with Drupal 11.
+
 This module provides additional access restrictions based on the value of a common field between user and entity. If both the fields hold same value, the user will have access to operations its role has opted. View, Edit and Delete operations can be managed for Entities (Content and Taxonomy).
 
 Allowed field types:
