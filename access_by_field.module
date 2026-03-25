@@ -1,0 +1,155 @@
+<?php
+
+/**
+ * @file
+ * Hooks and functions related to access_by_field.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function access_by_field_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.access_by_field':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module allows the additional access restrictions based on a value of a common field between user and entity.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Fields Mappings') . '</dt>';
+      $output .= '<dd>' . t('This form takes care of mapping between Entity & User fields.') . '</dd>';
+      $output .= '<dt>' . t('Bypass Roles') . '</dt>';
+      $output .= '<dd>' . t('If a role needs unrestricted access to the entity, it can be bypassed from this form.') . '</dd>';
+      $output .= '<dt>' . t('Mapping Dashboard') . '</dt>';
+      $output .= '<dd>' . t('A lit of all mappings done in Mapping Form can be found here.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function access_by_field_entity_access(EntityInterface $entity, $op, AccountInterface $account) {
+  $entity_types = [
+    'node',
+    'taxonomy_term'
+  ];
+  if (!in_array($entity->getEntityTypeId(), $entity_types)) {
+    return;
+  }
+  // Validate access for entity.
+  return _access_by_field_override_permissions($entity, $op, $account);
+}
+
+/**
+ * Validate access for entity.
+ */
+function _access_by_field_override_permissions(EntityInterface $entity, $op, AccountInterface $account) {
+  // Load user entity & mapping configuration.
+  $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
+  $config = \Drupal::config('abf_fields_mapping.settings')->getRawData();
+  if (!isset($config[$entity->bundle()])) {
+    return;
+  }
+  $current_mapping = $config[$entity->bundle()];
+  // Define the field name for which mapping will be done.
+  $user_field = $current_mapping['user_field'];
+  $entity_field = $current_mapping['entity_field'];
+  // Get user tag terms.
+  $user_access = $user->{$user_field}->getValue();
+
+  // Skip the process if:
+  // 1. Field mapping configs are not set for the entity type.
+  // 2. Operation alter is not required for the current entity.
+  // 3. The user & current entity do not have the fields mapped.
+  if (!isset($current_mapping) || !in_array($op, array_filter($current_mapping['access_level']))
+    || empty($user_access) || !$entity->hasField($entity_field)) {
+    return;
+  }
+
+  // Getting user info.
+  $user_access = array_column($user_access, 'target_id');
+  $roles = $account->getRoles(TRUE);
+
+  // Get bypassed roles and skip the access mapping for those roles.
+  $bypassed_roles = \Drupal::config('abf_bypass_roles.settings')
+    ->get('bypassed_roles');
+  if (empty($bypassed_roles)) {
+    // Default bypass checks for administrator role.
+    $bypassed_roles['administrator'] = 'administrator';
+  }
+
+  foreach (array_filter($bypassed_roles, 'ucfirst') as $rid => $role) {
+    if (in_array($rid, $roles)) {
+      return;
+    }
+  }
+  // Check if node has field access tag.
+
+  // Get tagged fields values.
+  $entity_access = $entity->{$entity_field}->getValue();
+  if (empty($entity_access)) {
+    // If entity doesn't have any access tags, skip.
+    return;
+  }
+  switch ($op) {
+    case 'view':
+    case 'view all revisions':
+      $entity_access = array_column($entity_access, 'target_id');
+      // Check if user is assigned to anyone of the access tag node has
+      $access = array_intersect($user_access, $entity_access);
+      if (!empty($access)) {
+        return AccessResult::allowed();
+      }
+      return AccessResult::forbidden();
+
+    case 'update':
+      // Check user has tagged terms and edit entity permissions.
+      return _access_by_field_has_permissions($account, $entity, 'edit', $user_access, $entity_field);
+    case 'delete':
+      // Check user has tagged terms and delete entity permissions.
+      return _access_by_field_has_permissions($account, $entity, 'delete', $user_access, $entity_field);
+  }
+}
+
+/**
+ * Check user has access to entity.
+ */
+function _access_by_field_has_permissions($account, $entity, $op, $user_access, $field_name) {
+  $allowed = FALSE;
+  // Get tag terms node is tagged with.
+  $entity_access = $entity->{$field_name}->getValue();
+  // Get entity bundle.
+  $type = $entity->bundle();
+  $bundle = $entity->getEntityTypeId();
+  if ($bundle == 'node') {
+    if (($account->hasPermission($op . ' any ' . $type . ' content') ||
+        ($account->hasPermission($op . ' own ' . $type . ' content') &&
+        $account->id() == $entity->getOwnerId()))
+    ) {
+      $allowed = TRUE;
+    }
+  }
+  elseif ($bundle == 'taxonomy_term') {
+    // edit terms in access_tag.
+    if ($account->hasPermission($op . ' terms in ' . $type)) {
+      $allowed = TRUE;
+    }
+  }
+
+  if ($allowed) {
+    $entity_access = array_column($entity_access, 'target_id');
+    // Check if user is assigned to anyone of the access tags node has.
+    $access = array_intersect($user_access, $entity_access);
+    if (is_array($access) && !empty($access)) {
+      return AccessResult::allowed();
+    }
+  }
+  return AccessResult::forbidden();
+}
