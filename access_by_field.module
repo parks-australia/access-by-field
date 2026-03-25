@@ -26,7 +26,7 @@ function access_by_field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Bypass Roles') . '</dt>';
       $output .= '<dd>' . t('If a role needs unrestricted access to the entity, it can be bypassed from this form.') . '</dd>';
       $output .= '<dt>' . t('Mapping Dashboard') . '</dt>';
-      $output .= '<dd>' . t('A lit of all mappings done in Mapping Form can be found here.') . '</dd>';
+      $output .= '<dd>' . t('A list of all mappings done in Mapping Form can be found here.') . '</dd>';
       $output .= '</dl>';
       return $output;
   }
