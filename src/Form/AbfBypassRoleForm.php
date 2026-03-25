@@ -3,9 +3,10 @@
 namespace Drupal\access_by_field\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,7 +19,7 @@ class AbfBypassRoleForm extends ConfigFormBase {
   /**
    * The role storage.
    *
-   * @var \Drupal\user\RoleStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $roleStorage;
 
@@ -27,11 +28,13 @@ class AbfBypassRoleForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The factory for configuration objects.
-   * @param \Drupal\user\RoleStorageInterface $role_storage
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   *   The typed config manager.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $role_storage
    *   The role storage.
    */
-  public function __construct(ConfigFactoryInterface $configFactory, RoleStorageInterface $role_storage) {
-    parent::__construct($configFactory);
+  public function __construct(ConfigFactoryInterface $configFactory, TypedConfigManagerInterface $typed_config_manager, EntityStorageInterface $role_storage) {
+    parent::__construct($configFactory, $typed_config_manager);
     $this->roleStorage = $role_storage;
   }
 
@@ -41,6 +44,7 @@ class AbfBypassRoleForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('entity_type.manager')->getStorage('user_role'),
     );
   }
