@@ -9,7 +9,7 @@
       "type": "package",
       "package": {
         "name": "drupal/access-by-field",
-        "version": "2.0.x-dev",
+        "version": "2.0.x",
         "type": "drupal-module",
         "source": {
           "url": "https://github.com/parks-australia/access-by-field.git",
