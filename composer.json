@@ -1,0 +1,22 @@
+{
+  "name": "drupal/access_by_field",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "description": "A Drupal 11-compatible clone of https://git.drupalcode.org/project/access_by_field. Provides access control based on common field values between a User and an Entity.",
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "drupal/access-by-field",
+        "version": "2.0.x-dev",
+        "type": "drupal-module",
+        "source": {
+          "url": "https://github.com/parks-australia/access-by-field.git",
+          "type": "git",
+          "reference": "refs/heads/dev"
+        }
+      }
+    }
+  ]
+}
