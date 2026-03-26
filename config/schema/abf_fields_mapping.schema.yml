@@ -1,0 +1,26 @@
+abf_fields_mapping.settings:
+  type: mapping
+  label: 'Access by Field Mapping settings'
+  mapping:
+    # Each bundle (e.g. article, page, etc.) is a key.
+    "*":
+      type: mapping
+      label: 'Bundle mapping'
+      mapping:
+        entity_type:
+          type: string
+          label: 'Entity type'
+        mapping_label:
+          type: string
+          label: 'Mapping label'
+        access_level:
+          type: sequence
+          label: 'Access level'
+          sequence:
+            type: string
+        entity_field:
+          type: string
+          label: 'Entity field'
+        user_field:
+          type: string
+          label: 'User field'

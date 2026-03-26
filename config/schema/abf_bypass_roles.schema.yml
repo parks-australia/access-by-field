@@ -1,0 +1,9 @@
+abf_bypass_roles.settings:
+  type: mapping
+  label: 'Access by Field Bypass Roles settings'
+  mapping:
+    bypassed_roles:
+      type: sequence
+      label: 'Bypassed roles'
+      sequence:
+        type: string
