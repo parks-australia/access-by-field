@@ -2,5 +2,5 @@ name: Access Entity by Field Value
 description: 'This module access to entities based on field value.'
 type: module
 package: 'Others'
-core_version_requirement: '^9 || ^10 || ^11'
+core_version_requirement: '^11'
 configure: access_by_field.admin_config_abf
