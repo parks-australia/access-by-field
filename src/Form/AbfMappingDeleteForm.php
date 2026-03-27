@@ -82,7 +82,7 @@ class AbfMappingDeleteForm extends ConfirmFormBase {
    * @inheritDoc
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory->getEditable('abf_fields_mapping.settings');
+    $config = $this->configFactory->getEditable('access_by_field.abf_fields_mapping.settings');
     $config->clear($this->bundle)->save();
 
     $form_state->setRedirectUrl($this->getCancelUrl());

@@ -1,4 +1,4 @@
-abf_bypass_roles.settings:
+access_by_field.abf_bypass_roles.settings:
   type: mapping
   label: 'Access by Field Bypass Roles settings'
   mapping:

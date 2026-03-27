@@ -1,2 +1,2 @@
-# Default configuration for abf_bypass_roles.settings
+# Default configuration for access_by_field.abf_bypass_roles.settings
 bypassed_roles: {  }

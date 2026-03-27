@@ -10,6 +10,6 @@
  */
 function access_by_field_uninstall() {
   // Remove configs created by module.
-  \Drupal::configFactory()->getEditable('abf_fields_mapping.settings')->delete();
-  \Drupal::configFactory()->getEditable('abf_bypass_roles.settings')->delete();
+  \Drupal::configFactory()->getEditable('access_by_field.abf_fields_mapping.settings')->delete();
+  \Drupal::configFactory()->getEditable('access_by_field.abf_bypass_roles.settings')->delete();
 }

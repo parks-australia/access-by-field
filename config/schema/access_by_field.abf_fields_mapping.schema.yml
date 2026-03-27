@@ -1,4 +1,4 @@
-abf_fields_mapping.settings:
+access_by_field.abf_fields_mapping.settings:
   type: mapping
   label: 'Access by Field Mapping settings'
   mapping:

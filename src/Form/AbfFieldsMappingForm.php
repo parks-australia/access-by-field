@@ -75,7 +75,7 @@ class AbfFieldsMappingForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'abf_fields_mapping.settings',
+      'access_by_field.abf_fields_mapping.settings',
     ];
   }
 
@@ -93,7 +93,7 @@ class AbfFieldsMappingForm extends ConfigFormBase {
     // Getting data from configuration for setting default value of each field.
     // If bundle and type have some value but relevant mapping does not exist,
     // return warning on the screen.
-    $mapping_data = $this->config('abf_fields_mapping.settings')->getRawData();
+    $mapping_data = $this->config('access_by_field.abf_fields_mapping.settings')->getRawData();
     if ((!empty($type) && !empty($bundle)) && !array_key_exists($bundle, $mapping_data)) {
       return $this->setWarning($this->t('Selected bundle does not have any mapping data.'));
     }
@@ -228,7 +228,7 @@ class AbfFieldsMappingForm extends ConfigFormBase {
       'entity_field' => $form_state->getValue('entity_field'),
       'user_field' => $form_state->getValue('user_field'),
     ];
-    $this->config('abf_fields_mapping.settings')
+    $this->config('access_by_field.abf_fields_mapping.settings')
       ->set($entity, $mapping_data)
       ->save();
 
@@ -273,7 +273,7 @@ class AbfFieldsMappingForm extends ConfigFormBase {
   public function entityBundleCallback($form, FormStateInterface $form_state) {
     $ajax_response = new AjaxResponse();
     // Skip if mapping data is not an array.
-    $mapping_data = $this->config('abf_fields_mapping.settings')->getRawData();
+    $mapping_data = $this->config('access_by_field.abf_fields_mapping.settings')->getRawData();
     $selected_entity = $form_state->getValue('entity_type');
     $selected_bundle = $form_state->getValue('entity_bundle');
     // Display message if an entity does not have supported field.

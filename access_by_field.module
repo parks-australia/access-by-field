@@ -53,7 +53,7 @@ function access_by_field_entity_access(EntityInterface $entity, $op, AccountInte
 function _access_by_field_override_permissions(EntityInterface $entity, $op, AccountInterface $account) {
   // Load user entity & mapping configuration.
   $user = \Drupal::entityTypeManager()->getStorage('user')->load($account->id());
-  $config = \Drupal::config('abf_fields_mapping.settings')->getRawData();
+  $config = \Drupal::config('access_by_field.abf_fields_mapping.settings')->getRawData();
   if (!isset($config[$entity->bundle()])) {
     return;
   }
@@ -78,7 +78,7 @@ function _access_by_field_override_permissions(EntityInterface $entity, $op, Acc
   $roles = $account->getRoles(TRUE);
 
   // Get bypassed roles and skip the access mapping for those roles.
-  $bypassed_roles = \Drupal::config('abf_bypass_roles.settings')
+  $bypassed_roles = \Drupal::config('access_by_field.abf_bypass_roles.settings')
     ->get('bypassed_roles');
   if (empty($bypassed_roles)) {
     // Default bypass checks for administrator role.

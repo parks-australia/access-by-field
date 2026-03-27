@@ -54,7 +54,7 @@ class AbfBypassRoleForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'abf_bypass_roles.settings',
+      'access_by_field.abf_bypass_roles.settings',
     ];
   }
 
@@ -72,7 +72,7 @@ class AbfBypassRoleForm extends ConfigFormBase {
    * @return array
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('abf_bypass_roles.settings');
+    $config = $this->config('access_by_field.abf_bypass_roles.settings');
     foreach ($this->roleStorage->loadMultiple() as $rid => $role) {
       if ($role->id() !== 'anonymous' && $role->id() !== 'administrator') {
         $roles[$role->id()] = $role->label();
@@ -98,7 +98,7 @@ class AbfBypassRoleForm extends ConfigFormBase {
    * @return mixed
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('abf_bypass_roles.settings')
+    $this->config('access_by_field.abf_bypass_roles.settings')
       ->set('bypassed_roles', $form_state->getValue('bypassed_roles'))
       ->save();
 

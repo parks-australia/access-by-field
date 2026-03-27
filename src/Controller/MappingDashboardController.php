@@ -93,7 +93,7 @@ class MappingDashboardController extends ControllerBase {
 
     // Table rows.
     // Get raw data from mapping configuration.
-    $mapping_data = $this->config('abf_fields_mapping.settings')->getRawData();
+    $mapping_data = $this->config('access_by_field.abf_fields_mapping.settings')->getRawData();
     foreach ($mapping_data as $bundle => $data) {
       if (empty($data)) {
         continue;
