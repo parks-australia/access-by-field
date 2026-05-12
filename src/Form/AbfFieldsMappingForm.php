@@ -105,7 +105,7 @@ class AbfFieldsMappingForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
     // Allow user to select entity type for which the restrictions are needed.
-    // Entities that support the mapping are Content Type & Taxonomy.
+    // Entities that support the mapping are Content Type, Taxonomy and Content Blocks.
     // When user selects an entity type, a form loads with a set of fields
     // to capture the mapping information for that entity.
     $form['entity_type'] = [
@@ -113,7 +113,8 @@ class AbfFieldsMappingForm extends ConfigFormBase {
       '#title' => $this->t('Entity Type'),
       '#options' => [
         'node' => 'Content Type',
-        'taxonomy_term' => 'Vocabulary'
+        'taxonomy_term' => 'Vocabulary',
+        'block_content' => 'Content Block' 
       ],
       '#default_value' => !empty($type) ? $type : '--none--',
       '#empty_option' => $this->t('- Select an entity type -'),

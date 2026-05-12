@@ -38,7 +38,8 @@ function access_by_field_help($route_name, RouteMatchInterface $route_match) {
 function access_by_field_entity_access(EntityInterface $entity, $op, AccountInterface $account) {
   $entity_types = [
     'node',
-    'taxonomy_term'
+    'taxonomy_term',
+    'block_content'
   ];
   if (!in_array($entity->getEntityTypeId(), $entity_types)) {
     return;
@@ -138,6 +139,12 @@ function _access_by_field_has_permissions($account, $entity, $op, $user_access, 
   }
   elseif ($bundle == 'taxonomy_term') {
     // edit terms in access_tag.
+    if ($account->hasPermission($op . ' terms in ' . $type)) {
+      $allowed = TRUE;
+    }
+  }
+  elseif ($bundle == 'block_content') {
+    // edit blocks in access_tag.
     if ($account->hasPermission($op . ' terms in ' . $type)) {
       $allowed = TRUE;
     }
