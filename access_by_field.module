@@ -145,7 +145,10 @@ function _access_by_field_has_permissions($account, $entity, $op, $user_access, 
   }
   elseif ($bundle == 'block_content') {
     // edit blocks in access_tag.
-    if ($account->hasPermission($op . ' terms in ' . $type)) {
+      if (($account->hasPermission($op . ' any ' . $type . ' block content') ||
+          ($account->hasPermission($op . ' own ' . $type . ' block content') &&
+          $account->id() == $entity->getOwnerId()))
+      ) {
       $allowed = TRUE;
     }
   }
